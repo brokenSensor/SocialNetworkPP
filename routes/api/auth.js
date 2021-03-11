@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { check, validationResult } from 'express-validator';
 import gravatar from 'gravatar';
-import bcryptjs from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import User from '../../models/User.js';
+import passport from 'passport';
 
 const router = Router();
 
@@ -12,7 +13,7 @@ const router = Router();
 router.post(
 	'/',
 	[
-		check('name', 'User name is required').not().isEmpty(),
+		check('username', 'User name is required').not().isEmpty(),
 		check('email', 'Email must be valid').isEmail(),
 		check('password', 'Password must be at least 6 characters long').isLength({
 			min: 6,
@@ -24,10 +25,10 @@ router.post(
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		[username, email, password] = res.body;
+		const { username, email, password } = req.body;
 
 		try {
-			const user = await User.findOne({ email });
+			let user = await User.findOne({ email });
 
 			if (user) {
 				return res
@@ -48,14 +49,28 @@ router.post(
 				avatar,
 			});
 
-			const salt = await bcryptjs.genSalt(10);
-
-			user.password = await bcryptjs.hash(password, salt);
+			user.password = await bcrypt.hash(password, 10);
 
 			await user.save();
+
+			return res.json(user);
 		} catch (errore) {
 			console.error(error.message);
 			res.status(500).send('Server error');
 		}
 	}
 );
+
+// @route   GET api/auth
+// @desc    Authenticate user
+// @access  Public
+router.get('/', (req, res, next) => {
+	passport.authenticate('local', (err, user, info) => {
+		console.log(user, info);
+		req.logIn(user, err => {
+			return res.json(req);
+		});
+	});
+});
+
+export default router;
