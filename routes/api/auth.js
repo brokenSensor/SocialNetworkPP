@@ -47,6 +47,7 @@ router.post(
 				email,
 				password,
 				avatar,
+				provider: 'local',
 			});
 
 			user.password = await bcrypt.hash(password, 10);
@@ -54,7 +55,7 @@ router.post(
 			await user.save();
 
 			return res.json(user);
-		} catch (errore) {
+		} catch (error) {
 			console.error(error.message);
 			res.status(500).send('Server error');
 		}
@@ -64,13 +65,38 @@ router.post(
 // @route   GET api/auth
 // @desc    Authenticate user
 // @access  Public
-router.get('/', (req, res, next) => {
-	passport.authenticate('local', (err, user, info) => {
-		console.log(user, info);
-		req.logIn(user, err => {
-			return res.json(req);
-		});
-	});
+router.get(
+	'/',
+	passport.authenticate('local', { failureRedirect: '/login' }),
+	(req, res) => {
+		console.log(req.user);
+		res.redirect('/');
+	}
+);
+
+// @route   GET api/auth/google
+// @desc    Authenticate with Google
+// @access  Public
+router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
+
+// @route   GET api/auth/google/callback
+// @desc    Google auth callback
+// @access  Public
+router.get(
+	'/google/callback',
+	passport.authenticate('google', { failureRedirect: '/' }),
+	(req, res) => {
+		console.log(req.user);
+		res.redirect('/');
+	}
+);
+
+// @route   GET api/auth/logout
+// @desc    Logout
+// @access  Public
+router.get('/logout', (req, res) => {
+	req.logout();
+	res.redirect('/');
 });
 
 export default router;
