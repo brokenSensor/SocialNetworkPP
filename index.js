@@ -2,11 +2,14 @@ import express from 'express';
 import DBconnect from './utils/DBconnect.js';
 import passport from 'passport';
 import session from 'express-session';
-import MongoStore from 'connect-mongo';
 import authRoute from './routes/api/auth.js';
+import mongoose from 'mongoose';
 
 import dotenv from 'dotenv';
 dotenv.config();
+
+import { default as connectMongodbSession } from 'connect-mongodb-session';
+const MongoDBStore = connectMongodbSession(session);
 
 import initializePassport from './utils/passport-config.js';
 initializePassport(passport);
@@ -22,9 +25,13 @@ app.use(
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
-		store: new MongoStore(),
+		store: new MongoDBStore({
+			uri: process.env.MONGOURI,
+			collection: 'sessions',
+		}),
 	})
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 

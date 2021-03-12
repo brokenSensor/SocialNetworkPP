@@ -4,6 +4,7 @@ import gravatar from 'gravatar';
 import bcrypt from 'bcrypt';
 import User from '../../models/User.js';
 import passport from 'passport';
+import ProtectedRoute from '../../middleware/auth.js';
 
 const router = Router();
 
