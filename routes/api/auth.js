@@ -78,7 +78,13 @@ router.get(
 // @route   GET api/auth/google
 // @desc    Authenticate with Google
 // @access  Public
-router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
+router.get(
+	'/google',
+	passport.authenticate('google', {
+		failureRedirect: '/login',
+		scope: ['profile'],
+	})
+);
 
 // @route   GET api/auth/google/callback
 // @desc    Google auth callback
