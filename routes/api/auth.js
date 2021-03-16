@@ -66,13 +66,17 @@ router.post(
 // @route   POST api/auth/local
 // @desc    Authenticate user localy
 // @access  Public
-router.post(
-	'/local',
-	passport.authenticate('local', { failureRedirect: '/login' }),
-	(req, res) => {
-		return res.json(req.user);
-	}
-);
+router.post('/local', (req, res) => {
+	passport.authenticate('local', (err, user, info) => {
+		if (err) {
+			return res.status(400).json({ errors: err });
+		}
+		if (info) {
+			return res.status(400).json({ errors: info });
+		}
+		return res.json(user);
+	})(req, res);
+});
 
 // @route   GET api/auth/google
 // @desc    Authenticate with Google
