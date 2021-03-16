@@ -5,7 +5,7 @@ const DBconnect = () => {
 		process.env.MONGOURI,
 		{ useNewUrlParser: true, useUnifiedTopology: true },
 		() => {
-			console.log('MogoDB is connected!');
+			console.log('MongoDB is connected!');
 		}
 	);
 };
