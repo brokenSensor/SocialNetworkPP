@@ -8,11 +8,11 @@ import ProtectedRoute from '../../middleware/auth.js';
 
 const router = Router();
 
-// @route   POST api/auth
+// @route   POST api/auth/create
 // @desc    Create user
 // @access  Public
 router.post(
-	'/',
+	'/create',
 	[
 		check('username', 'User name is required').not().isEmpty(),
 		check('email', 'Email must be valid').isEmail(),
@@ -63,15 +63,14 @@ router.post(
 	}
 );
 
-// @route   GET api/auth
-// @desc    Authenticate user
+// @route   POST api/auth/local
+// @desc    Authenticate user localy
 // @access  Public
-router.get(
-	'/',
+router.post(
+	'/local',
 	passport.authenticate('local', { failureRedirect: '/login' }),
 	(req, res) => {
-		console.log(req.user);
-		res.redirect('/');
+		return res.json(req.user);
 	}
 );
 
@@ -91,10 +90,9 @@ router.get(
 // @access  Public
 router.get(
 	'/google/callback',
-	passport.authenticate('google', { failureRedirect: '/' }),
+	passport.authenticate('google', { failureRedirect: '/login' }),
 	(req, res) => {
-		console.log(req.user);
-		res.redirect('/');
+		return res.json(req.user);
 	}
 );
 
@@ -104,6 +102,13 @@ router.get(
 router.get('/logout', (req, res) => {
 	req.logout();
 	res.redirect('/');
+});
+
+// @route   GET api/auth/
+// @desc    Get auth user
+// @access  Privet
+router.get('/', ProtectedRoute, (req, res) => {
+	return res.json(req.user);
 });
 
 export default router;
