@@ -1,4 +1,4 @@
-import e, { Router } from 'express';
+import { Router } from 'express';
 import { check, validationResult } from 'express-validator';
 import ProtectedRoute from '../../middleware/auth.js';
 import Profile from '../../models/Profile.js';
