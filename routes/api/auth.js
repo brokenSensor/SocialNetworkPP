@@ -55,7 +55,12 @@ router.post(
 
 			await user.save();
 
-			return res.json(user);
+			req.logIn(user, err => {
+				if (err) {
+					return res.status(400).json({ errors: err });
+				}
+				return res.json(user);
+			});
 		} catch (error) {
 			console.error(error.message);
 			res.status(500).send('Server error');
