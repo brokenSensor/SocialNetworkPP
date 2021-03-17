@@ -73,7 +73,8 @@ router.delete('/', ProtectedRoute, async (req, res) => {
 	//Delete posts to do
 	try {
 		await Profile.deleteOne({ user: req.user.id });
-		await User.deleteOne({ id: req.user.id });
+		await User.deleteOne({ _id: req.user.id });
+		req.logOut();
 		res.json({ msg: 'User deleted' });
 	} catch (error) {
 		console.error(error);
