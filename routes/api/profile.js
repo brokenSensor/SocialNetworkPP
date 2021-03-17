@@ -120,8 +120,11 @@ router.put(
 
 		try {
 			let profile = await Profile.findOne({ user: req.user.id });
+
 			profile.education.unshift(newEdu);
+
 			await profile.save();
+
 			return res.json(profile);
 		} catch (error) {
 			console.error(error);
@@ -131,19 +134,52 @@ router.put(
 );
 
 // @route   DELETE api/profile/education/:edu_id
-// @desc    Add education
+// @desc    Delete education by id
 // @access  Privet
 router.delete('/education/:edu_id', ProtectedRoute, async (req, res) => {
-	let profile = await Profile.findOne({ user: req.user.id });
-	profile.education = profile.education.filter(edu => {
-		if (edu._id == req.params.edu_id) {
-			return false;
+	const edu_id = req.params.edu_id;
+
+	try {
+		let profile = await Profile.findOne({ user: req.user.id });
+
+		profile.education = profile.education.filter(edu => {
+			if (edu._id == edu_id) {
+				return false;
+			} else {
+				return true;
+			}
+		});
+
+		await profile.save();
+
+		res.json(profile);
+	} catch (error) {
+		console.error(error);
+		res.status(500).send('Server error');
+	}
+});
+
+// @route   GET api/profile/:user_id
+// @desc    Get profile by user id
+// @access  Privet
+router.get('/:user_id', ProtectedRoute, async (req, res) => {
+	const user_id = req.params.user_id;
+
+	try {
+		const profile = await Profile.findOne({ user: user_id }).populate('user', [
+			'username',
+			'avatar',
+		]);
+
+		if (profile) {
+			return res.json(profile);
 		} else {
-			return true;
+			return res.status(400).json({ msg: 'Profile not found' });
 		}
-	});
-	await profile.save();
-	res.json(profile);
+	} catch (error) {
+		console.error(error);
+		res.status(500).send('Server error');
+	}
 });
 
 export default router;
