@@ -66,6 +66,23 @@ router.post(
 		}
 	}
 );
+
+// @route   GET api/profile/me
+// @desc    Get my profile
+// @access  Privet
+router.get('/me', ProtectedRoute, async (req, res) => {
+	try {
+		const profile = await Profile.findOne({
+			user: req.user.id,
+		}).populate('user', ['name', 'avatar']);
+
+		res.json(profile);
+	} catch (error) {
+		console.error(error);
+		res.status(500).send('Server Error');
+	}
+});
+
 // @route   DELETE api/profile/
 // @desc    Delete profile, user and posts
 // @access  Privet
