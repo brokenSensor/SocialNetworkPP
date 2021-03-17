@@ -3,7 +3,7 @@ import DBconnect from './utils/DBconnect.js';
 import passport from 'passport';
 import session from 'express-session';
 import authRoute from './routes/api/auth.js';
-import profilesRoute from './routes/api/profiles.js';
+import profilesRoute from './routes/api/profile.js';
 import mongoose from 'mongoose';
 
 import dotenv from 'dotenv';
@@ -38,7 +38,7 @@ app.use(passport.session());
 
 //Routes
 app.use('/api/auth', authRoute);
-app.use('/api/profiles', profilesRoute);
+app.use('/api/profile', profilesRoute);
 
 const PORT = process.env.PORT || 5000;
 

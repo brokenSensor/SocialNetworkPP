@@ -2,10 +2,11 @@ import { Router } from 'express';
 import { check, validationResult } from 'express-validator';
 import ProtectedRoute from '../../middleware/auth.js';
 import Profile from '../../models/Profile.js';
+import User from '../../models/User.js';
 
 const router = Router();
 
-// @route   POST api/profiles/create
+// @route   POST api/profile/create
 // @desc    Create or update profile
 // @access  Privet
 router.post(
@@ -65,5 +66,19 @@ router.post(
 		}
 	}
 );
+// @route   DELETE api/profile/
+// @desc    Delete profile, user and posts
+// @access  Privet
+router.delete('/', ProtectedRoute, async (req, res) => {
+	//Delete posts to do
+	try {
+		await Profile.deleteOne({ user: req.user.id });
+		await User.deleteOne({ id: req.user.id });
+		res.json({ msg: 'User deleted' });
+	} catch (error) {
+		console.error(error);
+		res.status(500).send('Server error');
+	}
+});
 
 export default router;
