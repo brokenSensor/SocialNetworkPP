@@ -74,7 +74,12 @@ router.post('/local', (req, res) => {
 		if (info) {
 			return res.status(400).json({ errors: info });
 		}
-		return res.json(user);
+		req.logIn(user, err => {
+			if (err) {
+				return res.status(400).json({ errors: err });
+			}
+			return res.json(user);
+		});
 	})(req, res);
 });
 
