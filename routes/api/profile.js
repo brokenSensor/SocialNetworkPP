@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import e, { Router } from 'express';
 import { check, validationResult } from 'express-validator';
 import ProtectedRoute from '../../middleware/auth.js';
 import Profile from '../../models/Profile.js';
@@ -129,5 +129,21 @@ router.put(
 		}
 	}
 );
+
+// @route   DELETE api/profile/education/:edu_id
+// @desc    Add education
+// @access  Privet
+router.delete('/education/:edu_id', ProtectedRoute, async (req, res) => {
+	let profile = await Profile.findOne({ user: req.user.id });
+	profile.education = profile.education.filter(edu => {
+		if (edu._id == req.params.edu_id) {
+			return false;
+		} else {
+			return true;
+		}
+	});
+	await profile.save();
+	res.json(profile);
+});
 
 export default router;
