@@ -74,9 +74,26 @@ router.get('/me', ProtectedRoute, async (req, res) => {
 	try {
 		const profile = await Profile.findOne({
 			user: req.user.id,
-		}).populate('user', ['name', 'avatar']);
+		}).populate('user', ['username', 'avatar']);
 
 		res.json(profile);
+	} catch (error) {
+		console.error(error);
+		res.status(500).send('Server Error');
+	}
+});
+
+// @route   GET api/profile/
+// @desc    Get all profiles
+// @access  Privet
+router.get('/', ProtectedRoute, async (req, res) => {
+	try {
+		const profiles = await Profile.find().populate('user', [
+			'username',
+			'avatar',
+		]);
+
+		res.json(profiles);
 	} catch (error) {
 		console.error(error);
 		res.status(500).send('Server Error');
