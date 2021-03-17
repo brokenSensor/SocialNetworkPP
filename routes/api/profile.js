@@ -81,5 +81,53 @@ router.delete('/', ProtectedRoute, async (req, res) => {
 		res.status(500).send('Server error');
 	}
 });
+// @route   PUT api/profile/
+// @desc    Add education
+// @access  Privet
+router.put(
+	'/education',
+	[
+		check('school', 'School is reqired').not().isEmpty(),
+		check('degree', 'Degree is reqired').not().isEmpty(),
+		check('fieldofstudy', 'Field of Study is reqired').not().isEmpty(),
+		check('from', 'From date is reqired').not().isEmpty(),
+		ProtectedRoute,
+	],
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
+		const {
+			school,
+			degree,
+			fieldofstudy,
+			from,
+			to,
+			current,
+			description,
+		} = req.body;
+
+		const newEdu = {
+			school,
+			degree,
+			fieldofstudy,
+			from,
+			to,
+			current,
+			description,
+		};
+
+		try {
+			let profile = await Profile.findOne({ user: req.user.id });
+			profile.education.unshift(newEdu);
+			await profile.save();
+			return res.json(profile);
+		} catch (error) {
+			console.error(error);
+			res.status(500).send('Server error');
+		}
+	}
+);
 
 export default router;
