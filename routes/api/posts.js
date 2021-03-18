@@ -35,4 +35,18 @@ router.post(
 	}
 );
 
+// @route   GET api/posts/
+// @desc    Get all posts
+// @access  Privet
+router.get('/', ProtectedRoute, async (req, res) => {
+	try {
+		const posts = await Post.find();
+
+		return res.json(posts);
+	} catch (error) {
+		console.error(error.message);
+		res.status(500).send('Server error');
+	}
+});
+
 export default router;
