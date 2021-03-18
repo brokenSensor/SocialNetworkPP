@@ -58,7 +58,9 @@ router.get('/:post_id', ProtectedRoute, async (req, res) => {
 		if (post === null) return res.json({ msg: 'Post not found' });
 		return res.json(post);
 	} catch (error) {
-		console.error(error.message);
+		console.error(error);
+		if (error.kind === 'ObjectId')
+			return res.status(404).json({ msg: 'Post not found' });
 		res.status(500).send('Server error');
 	}
 });
@@ -71,12 +73,45 @@ router.delete('/:post_id', ProtectedRoute, async (req, res) => {
 		const post = await Post.findById(req.user._id);
 
 		if (String(post?.user) === String(req.user._id)) {
-			await Post.findByIdAndDelete(req.params.post_id);
+			await post.remove();
 			return res.json({ msg: 'Post deleted' });
 		}
 		return res.json({ msg: 'Post not found' });
 	} catch (error) {
-		console.error(error.message);
+		console.error(error);
+		if (error.kind === 'ObjectId')
+			return res.status(404).json({ msg: 'Post not found' });
+		res.status(500).send('Server error');
+	}
+});
+
+// @route   PUT api/posts/like/:post_id
+// @desc    Like/unlike post
+// @access  Privet
+router.put('/like/:post_id', ProtectedRoute, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.post_id);
+
+		if (!post) return res.json({ msg: 'Post not found' });
+
+		const likeIndex = post.likes.findIndex(like => {
+			if (String(like.user) === String(req.user.id)) {
+				return true;
+			}
+		});
+
+		if (likeIndex === -1) {
+			post.likes.push({ user: req.user.id });
+		} else {
+			post.likes.splice(likeIndex, 1);
+		}
+
+		await post.save();
+		return res.json(post);
+	} catch (error) {
+		console.error(error);
+		if (error.kind === 'ObjectId')
+			return res.status(404).json({ msg: 'Post not found' });
 		res.status(500).send('Server error');
 	}
 });
