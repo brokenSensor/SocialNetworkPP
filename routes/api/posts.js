@@ -150,4 +150,41 @@ router.post(
 	}
 );
 
+// @route   DELETE api/posts/comment/:post_id/:comment_id
+// @desc    Delete comment
+// @access  Privet
+router.delete(
+	'/comment/:post_id/:comment_id',
+	ProtectedRoute,
+	async (req, res) => {
+		try {
+			const post = await Post.findById(req.params.post_id);
+
+			if (!post) return res.json({ msg: 'Post not found' });
+
+			const commentIndex = post.comments.findIndex(comment => {
+				if (String(comment.id) === req.params.comment_id) {
+					return true;
+				}
+			});
+
+			if (commentIndex === -1) return res.json({ msg: 'Comment not found' });
+
+			if (String(post.comments[commentIndex].user) !== String(req.user._id)) {
+				return res.json({ msg: 'Comment not found' });
+			}
+
+			post.comments.splice(commentIndex, 1);
+
+			await post.save();
+			return res.json(post);
+		} catch (error) {
+			console.error(error);
+			if (error.kind === 'ObjectId')
+				return res.status(404).json({ msg: 'Post not found' });
+			res.status(500).send('Server error');
+		}
+	}
+);
+
 export default router;
