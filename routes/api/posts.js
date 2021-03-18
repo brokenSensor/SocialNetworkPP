@@ -49,4 +49,18 @@ router.get('/', ProtectedRoute, async (req, res) => {
 	}
 });
 
+// @route   GET api/posts/:post_id
+// @desc    Get post by id
+// @access  Privet
+router.get('/:post_id', ProtectedRoute, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.post_id);
+
+		return res.json(post);
+	} catch (error) {
+		console.error(error.message);
+		res.status(500).send('Server error');
+	}
+});
+
 export default router;
