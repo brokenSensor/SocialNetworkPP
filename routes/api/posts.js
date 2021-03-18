@@ -116,4 +116,38 @@ router.put('/like/:post_id', ProtectedRoute, async (req, res) => {
 	}
 });
 
+// @route   POST api/posts/comment/:post_id
+// @desc    Add comment to post
+// @access  Privet
+router.post(
+	'/comment/:post_id',
+	[check('text', 'Must not be empty comment').not().isEmpty(), ProtectedRoute],
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
+
+		try {
+			const post = await Post.findById(req.params.post_id);
+
+			if (!post) return res.json({ msg: 'Post not found' });
+
+			post.comments.push({
+				user: req.user._id,
+				text: req.body.text,
+				avatar: req.user.avatar,
+			});
+
+			await post.save();
+			return res.json(post);
+		} catch (error) {
+			console.error(error);
+			if (error.kind === 'ObjectId')
+				return res.status(404).json({ msg: 'Post not found' });
+			res.status(500).send('Server error');
+		}
+	}
+);
+
 export default router;
