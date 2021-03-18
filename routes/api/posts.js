@@ -55,8 +55,26 @@ router.get('/', ProtectedRoute, async (req, res) => {
 router.get('/:post_id', ProtectedRoute, async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.post_id);
-
+		if (post === null) return res.json({ msg: 'Post not found' });
 		return res.json(post);
+	} catch (error) {
+		console.error(error.message);
+		res.status(500).send('Server error');
+	}
+});
+
+// @route   DELETE api/posts/:post_id
+// @desc    Delete post by id
+// @access  Privet
+router.delete('/:post_id', ProtectedRoute, async (req, res) => {
+	try {
+		const post = await Post.findById(req.user._id);
+
+		if (String(post?.user) === String(req.user._id)) {
+			await Post.findByIdAndDelete(req.params.post_id);
+			return res.json({ msg: 'Post deleted' });
+		}
+		return res.json({ msg: 'Post not found' });
 	} catch (error) {
 		console.error(error.message);
 		res.status(500).send('Server error');
