@@ -1,5 +1,13 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { REGISTER_SUCCESS, USER_LOADED } from '../actions/types';
+import {
+	REGISTER_SUCCESS,
+	USER_LOADED,
+	LOGIN_SUCCESS,
+	LOGOUT,
+	AUTH_ERROR,
+	REGISTER_FAIL,
+	LOGIN_FAIL,
+} from '../actions/types';
 
 const initialState = {
 	isAuthenticated: null,
@@ -13,8 +21,13 @@ export default function (state = initialState, action) {
 		case USER_LOADED:
 			return { ...state, isAuthenticated: true, loading: false, user: payload };
 		case REGISTER_SUCCESS:
-			return { ...state, ...payload, isAuthenticated: true, loading: false };
-
+		case LOGIN_SUCCESS:
+			return { ...state, isAuthenticated: true, loading: true };
+		case LOGOUT:
+		case AUTH_ERROR:
+		case REGISTER_FAIL:
+		case LOGIN_FAIL:
+			return { isAuthenticated: false, loading: false };
 		default:
 			return state;
 	}
