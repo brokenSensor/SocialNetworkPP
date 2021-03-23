@@ -2,18 +2,33 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Auth.sass';
 import { Link } from 'react-router-dom';
+import { login } from '../../actions/auth';
+import { connect } from 'react-redux';
 
-function Login(props) {
+function Login({ login }) {
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
 	});
 
 	const { email, password } = formData;
+
+	const onChange = e => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+	const onSubmit = async e => {
+		e.preventDefault();
+		login(email, password);
+	};
 	return (
 		<>
 			<div className='login'>
-				<form>
+				<form
+					onSubmit={e => {
+						onSubmit(e);
+					}}
+				>
 					<input
 						type='email'
 						name='email'
@@ -21,6 +36,9 @@ function Login(props) {
 						required
 						placeholder='Enter your email'
 						value={email}
+						onChange={e => {
+							onChange(e);
+						}}
 					/>
 					<input
 						type='password'
@@ -30,6 +48,9 @@ function Login(props) {
 						required
 						placeholder='Enter your password'
 						value={password}
+						onChange={e => {
+							onChange(e);
+						}}
 					/>
 					<input type='submit' value='Login' />
 				</form>
@@ -41,6 +62,8 @@ function Login(props) {
 	);
 }
 
-Login.propTypes = {};
+Login.propTypes = {
+	login: PropTypes.func.isRequired,
+};
 
-export default Login;
+export default connect(null, { login })(Login);
