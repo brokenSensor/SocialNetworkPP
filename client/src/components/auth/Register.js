@@ -4,8 +4,9 @@ import './Auth.sass';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { register } from '../../actions/auth';
+import { setAlert } from '../../actions/alert';
 
-function Register({ register }) {
+function Register({ setAlert, register }) {
 	const [formData, setFormData] = useState({
 		username: '',
 		email: '',
@@ -21,7 +22,11 @@ function Register({ register }) {
 
 	const onSubmit = e => {
 		e.preventDefault();
-		register({ username, email, password });
+		if (password !== password2) {
+			setAlert('Passwords do not match', 'danger');
+		} else {
+			register({ username, email, password });
+		}
 	};
 	return (
 		<>
@@ -84,6 +89,9 @@ function Register({ register }) {
 	);
 }
 
-Register.propTypes = {};
+Register.propTypes = {
+	login: PropTypes.func.isRequired,
+	setAlert: PropTypes.func.isRequired,
+};
 
-export default connect(null, { register })(Register);
+export default connect(null, { register, setAlert })(Register);
