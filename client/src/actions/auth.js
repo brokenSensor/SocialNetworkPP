@@ -75,10 +75,11 @@ export const login = (email, password) => async dispatch => {
 
 	const body = JSON.stringify({ email, password });
 	try {
-		const res = await axios.post('/api/auth/local', body, config);
+		await axios.post('/api/auth/local', body, config);
 		dispatch({
 			type: LOGIN_SUCCESS,
 		});
+
 		dispatch(loadUser());
 	} catch (error) {
 		const err = error.response.data.errors;
