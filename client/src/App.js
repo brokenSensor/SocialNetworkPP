@@ -18,8 +18,10 @@ function App() {
 			<BrowserRouter>
 				<Navbar />
 				<section className='main'>
-					<Route exact path='/login' component={Login} />
-					<Route exact path='/register' component={Register} />
+					<Switch>
+						<Route exact path='/login' component={Login} />
+						<Route exact path='/register' component={Register} />
+					</Switch>
 				</section>
 				{/* <Footer /> */}
 			</BrowserRouter>
