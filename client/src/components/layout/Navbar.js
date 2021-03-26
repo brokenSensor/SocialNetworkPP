@@ -5,12 +5,11 @@ import { logout } from '../../actions/auth';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function Navbar({ auth: { isAuthenticated }, logout }) {
-	console.log(isAuthenticated);
+function Navbar({ auth: { isAuthenticated, user }, logout }) {
 	return (
 		isAuthenticated && (
 			<nav className='navbar'>
-				<Link to='/profile'>My profile</Link>
+				<Link to={`/profile/${user?._id}`}>My profile</Link>
 				<Link to='/dashboard'>Dashboard</Link>
 				<a href='#!' onClick={logout}>
 					Logout
