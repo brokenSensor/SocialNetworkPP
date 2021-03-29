@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { loadProfile } from '../../actions/profile';
+import { Link } from 'react-router-dom';
+import './profile.sass';
 
 function Profile({ profile: { profile, loading }, auth, loadProfile, match }) {
 	useEffect(() => {
@@ -25,7 +27,9 @@ function Profile({ profile: { profile, loading }, auth, loadProfile, match }) {
 			</div>
 		</>
 	) : (
-		<input type='button' value='Create profile' />
+		<Link className='centerd' to='/edit-profile'>
+			<input className='btn' type='button' value='Create profile' />
+		</Link>
 	);
 }
 
