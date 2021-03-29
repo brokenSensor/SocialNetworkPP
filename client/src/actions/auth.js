@@ -48,12 +48,9 @@ export const register = ({ username, email, password }) => async dispatch => {
 
 	try {
 		await axios.post('/api/auth/create', body, config);
-		dispatch({
-			type: REGISTER_SUCCESS,
-		});
 		dispatch(loadUser());
 	} catch (error) {
-		const err = error.response.data?.errors;
+		const err = error.response?.data?.errors;
 
 		if (err) {
 			err.forEach(er => dispatch(setAlert(er.msg, 'danger')));
@@ -76,13 +73,9 @@ export const login = (email, password) => async dispatch => {
 	const body = JSON.stringify({ email, password });
 	try {
 		await axios.post('/api/auth/local', body, config);
-		dispatch({
-			type: LOGIN_SUCCESS,
-		});
-
 		dispatch(loadUser());
 	} catch (error) {
-		const err = error.response.data.errors;
+		const err = error.response?.data?.errors;
 
 		if (err) {
 			err.forEach(er => dispatch(setAlert(er.msg, 'danger')));
