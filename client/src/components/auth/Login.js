@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Auth.sass';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { login } from '../../actions/auth';
 import { connect } from 'react-redux';
 
-function Login({ login }) {
+function Login({ login, auth }) {
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
@@ -21,6 +21,9 @@ function Login({ login }) {
 		e.preventDefault();
 		login(email, password);
 	};
+	if (auth.isAuthenticated && !auth.loading) {
+		return <Redirect to={`/profile/${auth.user._id}`} />;
+	}
 	return (
 		<>
 			<div className='login'>
@@ -64,6 +67,11 @@ function Login({ login }) {
 
 Login.propTypes = {
 	login: PropTypes.func.isRequired,
+	auth: PropTypes.object,
 };
 
-export default connect(null, { login })(Login);
+const mapStateToProps = state => ({
+	auth: state.auth,
+});
+
+export default connect(mapStateToProps, { login })(Login);

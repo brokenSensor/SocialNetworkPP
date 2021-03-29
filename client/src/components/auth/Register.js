@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Auth.sass';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { register } from '../../actions/auth';
 import { setAlert } from '../../actions/alert';
 
-function Register({ setAlert, register }) {
+function Register({ setAlert, register, auth }) {
 	const [formData, setFormData] = useState({
 		username: '',
 		email: '',
@@ -28,6 +28,9 @@ function Register({ setAlert, register }) {
 			register({ username, email, password });
 		}
 	};
+	if (auth.isAuthenticated) {
+		return <Redirect to={`/profile/${auth.user._id}`} />;
+	}
 	return (
 		<>
 			<div className='login'>
@@ -92,6 +95,11 @@ function Register({ setAlert, register }) {
 Register.propTypes = {
 	login: PropTypes.func.isRequired,
 	setAlert: PropTypes.func.isRequired,
+	auth: PropTypes.object.isRequired,
 };
 
-export default connect(null, { register, setAlert })(Register);
+const mapStateToProps = state => ({
+	auth: state.auth,
+});
+
+export default connect(mapStateToProps, { register, setAlert })(Register);
