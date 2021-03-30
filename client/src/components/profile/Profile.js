@@ -15,6 +15,13 @@ function Profile({ profile: { profile, loading }, auth, loadProfile, match }) {
 			<div className='profile_container'>
 				<div className='avatar-box'>
 					<img src={profile.user.avatar} alt='avatar' className='avatar' />
+					<Link to='/edit-profile'>
+						<input
+							className='btn btn-mini'
+							type='button'
+							value='Edit profile'
+						/>
+					</Link>
 				</div>
 			</div>
 			<div className='info-box'>
