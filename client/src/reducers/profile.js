@@ -1,5 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { PROFILE_LOADED, PROFILE_ERROR } from '../actions/types';
+import {
+	PROFILE_LOADED,
+	PROFILE_ERROR,
+	PROFILE_EDITED,
+} from '../actions/types';
 
 const initialState = {
 	loading: true,
@@ -11,6 +15,8 @@ export default function (state = initialState, action) {
 	switch (type) {
 		case PROFILE_LOADED:
 			return { ...state, profile: payload, loading: false };
+		case PROFILE_EDITED:
+			return { ...state, profile: payload };
 		case PROFILE_ERROR:
 			return { ...state, profile: null, loading: false };
 		default:
