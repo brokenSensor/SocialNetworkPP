@@ -6,6 +6,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Profile from './components/profile/Profile';
 import PrivetRoute from './components/routing/PrivetRoute';
+import EditProfile from './components/profile/EditProfile';
 
 import Navbar from './components/layout/Navbar';
 import { useEffect } from 'react';
@@ -24,6 +25,7 @@ function App() {
 						<Route exact path='/login' component={Login} />
 						<Route exact path='/register' component={Register} />
 						<PrivetRoute exact path='/profile/:id' component={Profile} />
+						<PrivetRoute exact path='/edit-profile' component={EditProfile} />
 					</Switch>
 				</section>
 				{/* <Footer /> */}
