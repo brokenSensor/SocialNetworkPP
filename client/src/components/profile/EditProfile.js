@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile } from '../../actions/profile';
+import './EditProfile.sass';
 
 function EditProfile({
 	history,
@@ -43,6 +44,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='status'
+					id='status'
 					autoComplete='off'
 					placeholder='Your status'
 					value={formFields.status}
@@ -53,6 +55,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='company'
+					id='company'
 					autoComplete='off'
 					placeholder='Your workplace'
 					value={formFields.company}
@@ -63,6 +66,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='website'
+					id='website'
 					autoComplete='off'
 					placeholder='Your website'
 					value={formFields.website}
@@ -73,6 +77,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='location'
+					id='location'
 					autoComplete='off'
 					placeholder='Your location'
 					value={formFields.location}
@@ -83,6 +88,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='bio'
+					id='bio'
 					autoComplete='off'
 					placeholder='Bio'
 					value={formFields.bio}
@@ -94,6 +100,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='github'
+					id='github'
 					autoComplete='off'
 					placeholder='Github'
 					value={formFields.github}
@@ -104,6 +111,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='youtube'
+					id='youtube'
 					autoComplete='off'
 					placeholder='Youtube'
 					value={formFields.youtube}
@@ -114,6 +122,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='twitter'
+					id='twitter'
 					autoComplete='off'
 					placeholder='Twitter'
 					value={formFields.twitter}
@@ -124,6 +133,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='facebook'
+					id='facebook'
 					autoComplete='off'
 					placeholder='Facebook'
 					value={formFields.facebook}
@@ -134,6 +144,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='linkedin'
+					id='linkedin'
 					autoComplete='off'
 					placeholder='Linkedin'
 					value={formFields.linkedin}
@@ -144,6 +155,7 @@ function EditProfile({
 				<input
 					type='text'
 					name='instagram'
+					id='instagram'
 					autoComplete='off'
 					placeholder='Instagram'
 					value={formFields.instagram}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { loadProfile } from '../../actions/profile';
 import { Link } from 'react-router-dom';
-import './profile.sass';
+import './Profile.sass';
 
 function Profile({ profile: { profile, loading }, auth, loadProfile, match }) {
 	useEffect(() => {
